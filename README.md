@@ -6,3 +6,10 @@
 3.  Python >2.7 installed
 4.  Psychopy installed
 
+## Start experiment in Windows
+1.  Download >> Unzip content of repository
+2.  Start script by either command line (cmd.exe) specifying script location:
+```
+python C:\Users\...\pointing.py
+```
+    Or Start script by associating `pointing.py` with python.exe (found in the Psychopy root folder). For this, simply right-click  `pointing.py`, then click Open with and assign python.exe with file.
