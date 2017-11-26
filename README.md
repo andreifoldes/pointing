@@ -12,4 +12,4 @@
 ```
 python C:\Users\...\pointing.py
 ```
-    Or Start script by associating `pointing.py` with python.exe (found in the Psychopy root folder). For this, simply right-click  `pointing.py`, then click Open with and assign python.exe with file.
+  Or Start script by associating `pointing.py` with python.exe (found in the Psychopy root folder). For this, simply right-click  `pointing.py`, then click Open with and assign python.exe with file.
