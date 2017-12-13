@@ -38,7 +38,7 @@ timer = core.Clock()
 
 
 ###########Dialog
-info = {'Id':'test', 'Age': 0, 'ExpVersion': 1.3,
+info = {'Id':'test', 'Age': 0, 'ExpVersion': 1.4,
         'Group': ['Feedback', 'Non-feedback'], 'Trials': 60}
 dictDlg = gui.DlgFromDict(dictionary=info,
         title='TestExperiment', fixed=['ExpVersion'])
