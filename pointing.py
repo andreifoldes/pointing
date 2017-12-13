@@ -12,21 +12,21 @@ from psychopy import core, visual, event, gui, data, iohub, monitors
 
 # your Serial port could be different!
 try:
-	arduino = serial.Serial('COM3', 9600, timeout = 1)
+	arduino = serial.Serial('COM3', 9600)
 except serial.SerialException:
-	arduino = serial.Serial('COM5', 9600, timeout = 1)
+	arduino = serial.Serial('COM5', 9600)
 except serial.SerialException:
-	arduino = serial.Serial('COM4', 9600, timeout = 1)
+	arduino = serial.Serial('COM4', 9600)
 except serial.SerialException:
-	arduino = serial.Serial('COM1', 9600, timeout = 1)
+	arduino = serial.Serial('COM1', 9600)
 except serial.SerialException:
-	arduino = serial.Serial('COM2', 9600, timeout = 1)
+	arduino = serial.Serial('COM2', 9600)
 
 # let it initialize
 mon = monitors.Monitor('default')
 time.sleep(2)
-winX = 1366
-winY = 768
+winX = 800
+winY = 600
 io=iohub.launchHubServer()
 mouse = io.devices.mouse
 mouse.clearEvents()
@@ -107,60 +107,47 @@ if dictDlg.OK:  # or if ok_data is not None
 				
 	elif info['Group'] == "Non-feedback":
 		
-		nonFeedback = visual.Window([winX,winY], monitor=mon, fullscr=True, color = -1)
+		nonFeedback = visual.Window([winX,winY], monitor=mon, fullscr=False, color = -1)
 		
 		message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", "0", "\n", "Ask P to Press button"]))
 		message.draw()
 		nonFeedback.flip()
-		
-		def waitForButton():
-			
-			while arduino.in_waiting:
-				print arduino.read()
-				
-			arduino.write(struct.pack('>B',2)) #grant permission
-			while True:
-				
-				if(arduino.inWaiting()>0):
-					tmp = arduino.read()
-					if tmp!= '':
-						if int(tmp)==2:
-							break
-							
-		t1 = threading.Thread(target = waitForButton)
-		t1.start()
 
-		t1.join()
+		while arduino.in_waiting:
+			print arduino.read()
+			
+		arduino.write(struct.pack('>B',2)) #grant permission
+		while True:
+			
+			if(arduino.inWaiting()>0):
+				tmp = arduino.read()
+				if tmp!= '':
+					if int(tmp)==2:
+						break
 		
 		message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", "0", "\n", "P pressed button"]))
 		message.draw()
 		nonFeedback.flip()
 		
 		
-		def waitForInterlock():
-			while arduino.in_waiting:
-				print arduino.read()
-				
-			arduino.write(struct.pack('>B',2)) #grant permission
+		while arduino.in_waiting:
+			print arduino.read()
 			
-			while True:
-
+		arduino.write(struct.pack('>B',2)) #grant permission
+		
+		message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", "0", "\n", "Ask P to Press button and keep it pressed until LED appears!" ]))
+		message.draw()
+		nonFeedback.flip()
+		
+		while True:
+			
+			if(arduino.inWaiting()>0):
 				tmp = arduino.read()
-				
 				if tmp!= '':
-
 					if int(tmp)==2:
-						print "Press Return"
 						break
 		
-		try:
-			t2 = threading.Thread( target = waitForInterlock)
-			t2.start()
-			
-		except:
-			print "Error: unable to start threads"
-		
-		message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", "0", "\n", "Ask P to Press button and keep it pressed until LED appears! \n Press Return" ]))
+		message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", "0", "\n", "Press Return!" ]))
 		message.draw()
 		nonFeedback.flip()
 		
@@ -168,12 +155,6 @@ if dictDlg.OK:  # or if ok_data is not None
 		
 		
 		dataOutput = pandas.DataFrame(columns=['id','age','group','trialIndex','stim','stimemOnset','RT','posX','posY'])
-		
-		t2.join()
-		
-		message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", "0", "Touchscreen working"]))
-		message.draw()
-		nonFeedback.flip()
 		
 		global timeOfParRelease
 							
@@ -197,16 +178,16 @@ if dictDlg.OK:  # or if ok_data is not None
 									print "P released button"
 									break
 				
+				
+				message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", str(i), "\n", "Press Return again"]))
+				message.draw()
+				nonFeedback.flip()
+				
 				try:
 					t3 = threading.Thread( target = waitForRelease)
 					t3.start()
 				except:
 					print "Error: unable to start threads"
-				
-				
-				message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", str(i), "\n", "Press Return again"]))
-				message.draw()
-				nonFeedback.flip()
 				
 				key = event.waitKeys(keyList="return", timeStamped=timer)
 				
