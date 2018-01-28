@@ -107,7 +107,7 @@ if dictDlg.OK:  # or if ok_data is not None
 				
 	elif info['Group'] == "Non-feedback":
 		
-		nonFeedback = visual.Window([winX,winY], monitor=mon, fullscr=False, color = -1)
+		nonFeedback = visual.Window([winX,winY], monitor=mon, fullscr=True, color = -1)
 		
 		message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", "0", "\n", "Ask P to Press button"]))
 		message.draw()
