@@ -68,7 +68,7 @@ if dictDlg.OK:  # or if ok_data is not None
 	i=1
 
 	if info['Group'] == "Feedback":
-		feedbackWin = visual.Window([winX,winY], monitor=mon, color = -1, fullscr=True)
+		feedbackWin = visual.Window([winX,winY], units='pix', monitor=mon, color = -1, fullscr=True)
 
 		dataOutput = pandas.DataFrame(columns=['id','age','group','trialIndex','stim','stimemOnset','RT','posX','posY'])
 		feedbackWin.flip()
@@ -107,7 +107,7 @@ if dictDlg.OK:  # or if ok_data is not None
 				
 	elif info['Group'] == "Non-feedback":
 		
-		nonFeedback = visual.Window([winX,winY], monitor=mon, fullscr=True, color = -1)
+		nonFeedback = visual.Window([winX,winY], units='pix', monitor=mon, fullscr=True, color = -1)
 		
 		message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", "0", "\n", "Ask P to Press button"]))
 		message.draw()
