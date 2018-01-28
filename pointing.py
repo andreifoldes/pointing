@@ -184,13 +184,14 @@ if dictDlg.OK:  # or if ok_data is not None
 				nonFeedback.flip()
 				
 				key = event.waitKeys(keyList="return", timeStamped=timer)
-
+				
 				try:
 					t3 = threading.Thread( target = waitForRelease)
 					t3.start()
 				except:
 					print "Error: unable to start threads"
 				
+				#key = event.waitKeys(keyList="return", timeStamped=timer)
 				
 				message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", str(i), "\n", "Stimulus initiated"]))
 				message.draw()

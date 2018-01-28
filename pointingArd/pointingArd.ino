@@ -28,6 +28,9 @@ void setup()
      pinMode(ledPin[n], OUTPUT);
      delay(100);
      digitalWrite(ledPin[n], HIGH);
+     delay(200);
+     digitalWrite(ledPin[n], LOW);
+
   }
   
   delay(500); // delay() is OK in setup as it only happens once
