@@ -30,10 +30,7 @@ winY = 600
 io=iohub.launchHubServer()
 mouse = io.devices.mouse
 mouse.clearEvents()
-# create stimulus array
-commandSet=[3,4,5,6,7,8]
-commandSetArray=numpy.repeat(commandSet,10)
-random.shuffle(commandSetArray)
+
 timer = core.Clock()
 
 
@@ -43,7 +40,10 @@ info = {'Id':'test', 'Age': 0, 'ExpVersion': 1.4,
 dictDlg = gui.DlgFromDict(dictionary=info,
         title='TestExperiment', fixed=['ExpVersion'])
 
-
+# create stimulus array
+commandSet=[3,4,5,6,7,8]
+commandSetArray=numpy.repeat(commandSet,info['Trials']/6)
+random.shuffle(commandSetArray)
 
 if dictDlg.OK:  # or if ok_data is not None
 	print(info)
