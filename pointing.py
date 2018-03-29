@@ -1,4 +1,4 @@
-
+                                         
 print("start...")
 import numpy
 import serial # you may need to install the pySerial :pyserial.sourceforge.net
@@ -35,7 +35,7 @@ timer = core.Clock()
 
 
 ###########Dialog
-info = {'Id':'test', 'Age': 0, 'ExpVersion': 1.4,
+info = {'Id':'test', 'Age': 0, 'Gender': ' ' , 'ExpVersion': 1.5,
         'Group': ['Feedback', 'Non-feedback'], 'Trials': 60}
 dictDlg = gui.DlgFromDict(dictionary=info,
         title='TestExperiment', fixed=['ExpVersion'])
@@ -44,6 +44,8 @@ dictDlg = gui.DlgFromDict(dictionary=info,
 commandSet=[3,4,5,6,7,8]
 commandSetArray=numpy.repeat(commandSet,info['Trials']/6)
 random.shuffle(commandSetArray)
+
+
 
 if dictDlg.OK:  # or if ok_data is not None
 	print(info)
@@ -65,15 +67,16 @@ if dictDlg.OK:  # or if ok_data is not None
 
 	trials = info['Trials']
 		
-	i=1
+	i=0
 
 	if info['Group'] == "Feedback":
 		feedbackWin = visual.Window([winX,winY], units='pix', monitor=mon, color = -1, fullscr=True)
 
-		dataOutput = pandas.DataFrame(columns=['id','age','group','trialIndex','stim','stimemOnset','RT','posX','posY'])
+		dataOutput = pandas.DataFrame(columns=['id','age','gender','group','trialIndex','stim','stimemOnset','RT','posX','posY'])
 		feedbackWin.flip()
+		
 
-		while i<=trials:
+		while i<trials:
 			message = visual.TextStim(feedbackWin, text= "Press Return")
 			message.draw()
 			feedbackWin.flip()
@@ -81,7 +84,7 @@ if dictDlg.OK:  # or if ok_data is not None
 			if key:
 				arduino.write(struct.pack('>B', commandSetArray[i]))
 				mouse.clearEvents()
-				message = visual.TextStim(feedbackWin, text= ' '.join(["TrialNum: ", str(i), "LedNum: ", str(commandSetArray[i]),"\n", "E Pressed Return"]))
+				message = visual.TextStim(feedbackWin, text= ' '.join(["TrialNum: ", str(i+1), "LedNum: ", str(commandSetArray[i]),"\n", "E Pressed Return"]))
 				message.draw()
 				feedbackWin.flip()
 				
@@ -92,9 +95,9 @@ if dictDlg.OK:  # or if ok_data is not None
 					
 				# If any response was recorded, react to it.
 				if e:
-
-					dataOutput.loc[dataOutput.shape[0]]=[info['Id'],info['Age'], info['Group'],
-					i,commandSetArray[i], key[0][1], e[0].time, e[0].x_position, e[0].y_position]
+					print(i)
+					dataOutput.loc[dataOutput.shape[0]]=[info['Id'],info['Age'],info['Gender'],info['Group'],
+					i+1,commandSetArray[i], key[0][1], e[0].time, e[0].x_position, e[0].y_position]
 					##added for continous output
 					dataOutput.to_csv(info['Id']+'.csv', index=False, encoding='utf-8')
 
@@ -154,11 +157,11 @@ if dictDlg.OK:  # or if ok_data is not None
 		key = event.waitKeys(keyList="return", timeStamped=timer)
 		
 		
-		dataOutput = pandas.DataFrame(columns=['id','age','group','trialIndex','stim','stimemOnset','RT','posX','posY'])
+		dataOutput = pandas.DataFrame(columns=['id','age','gender','group','trialIndex','stim','stimemOnset','RT','posX','posY'])
 		
 		global timeOfParRelease
 							
-		while i<=trials:
+		while i<trials:
 				
 				def waitForRelease():
 				
@@ -179,7 +182,7 @@ if dictDlg.OK:  # or if ok_data is not None
 									break
 				
 				
-				message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", str(i), "\n", "Press Return again"]))
+				message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", str(i+1), "\n", "Press Return again"]))
 				message.draw()
 				nonFeedback.flip()
 				
@@ -193,12 +196,12 @@ if dictDlg.OK:  # or if ok_data is not None
 				
 				#key = event.waitKeys(keyList="return", timeStamped=timer)
 				
-				message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", str(i), "\n", "Stimulus initiated"]))
+				message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", str(i+1), "\n", "Stimulus initiated"]))
 				message.draw()
 				nonFeedback.flip()
 
 				t3.join()
-				message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", str(i), "\n",  "Button released"]))
+				message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", str(i+1), "\n",  "Button released"]))
 				message.draw()
 				nonFeedback.flip()
 				
@@ -209,12 +212,12 @@ if dictDlg.OK:  # or if ok_data is not None
                                     .MOUSE_BUTTON_PRESS))                   
                             
 					if e:
-						dataOutput.loc[dataOutput.shape[0]]=[info['Id'],info['Age'], info['Group']
-						,i,commandSetArray[i], key[0][1], e[0].time, e[0].x_position, e[0].y_position]
+						dataOutput.loc[dataOutput.shape[0]]=[info['Id'],info['Age'],info['Gender'], info['Group']
+						,i+1,commandSetArray[i], key[0][1], e[0].time, e[0].x_position, e[0].y_position]
 						##added for continous output
 						dataOutput.to_csv(info['Id']+'.csv', index=False, encoding='utf-8')						
 						
-						message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", str(i), "\n", "Screen touched \n Wait for Participant to press button"]))
+						message = visual.TextStim(nonFeedback, text= ' '.join(["trial: ", str(i+1), "\n", "Screen touched \n Wait for Participant to press button"]))
 						message.draw()
 						nonFeedback.flip()
 						
@@ -253,7 +256,3 @@ if dictDlg.OK:  # or if ok_data is not None
 	time.sleep(5)
 	arduino.close()
 	core.quit()
-
-
-
-
